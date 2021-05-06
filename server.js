@@ -1,24 +1,20 @@
-const express= require("express");
-const mongoose = require("mongoose");
-const logger = require("morgan");
-const PORT = process.env.PORT || 8080;
+var PORT = process.env.PORT || 5000;
+var express = require('express');
+var app =express();
 
-const app = express();
-app.use (logger("dev")); 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static("public"));
-app.use(require ("./routes"));
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/workouts',
-{ 
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true, 
-    useFindAndModify:false,
-}
-);
-mongoose.connection.once("open", ()=>{
-    app.listen(PORT, ()=> {
-        console.log ("server is running")
-    })
-}) 
+var http = require('http');
+var server = http.server(app);
+
+app.use(express.static('client'));
+
+server.listen(PORT, function() {
+    console.log('server running');
+});
+
+var io = require('socket.io')(server);
+
+io.on('connection', function(socket) {
+    socket.on('message', function(msg) {
+        io.emit('message', msg);
+    });
+}); 
