@@ -1,7 +1,7 @@
 let mongoose = require("mongoose");
 let db = require("../models");
 
-mongoose.connect(process.env.MONGODB_URI || 'https://fitness-tracke.herokuapp.com/', { 
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/fitness-tracke', { 
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true, 
